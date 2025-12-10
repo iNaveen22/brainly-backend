@@ -8,7 +8,6 @@ const PASS_KEY = process.env.JWT_PASSWORD;
 
 export const userMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const header = req.get("authorization");
-    console.log("sdfghj", header);
     if (!header) {
         return res.status(401).json({ message: "Authorization header missing" });
     }
@@ -17,6 +16,7 @@ export const userMiddleware = (req: Request, res: Response, next: NextFunction) 
         ? header.slice(7).trim()
         : header.trim();
 
+
     if (!PASS_KEY) {
     console.error("JWT_PASSWORD not set!");
     return res.status(500).json({ message: "Server configuration error" });
@@ -24,9 +24,9 @@ export const userMiddleware = (req: Request, res: Response, next: NextFunction) 
 
     try {
         const decoded = Jwt.verify(token, PASS_KEY as string)
-        if (typeof decoded === "object" && decoded && "_id" in decoded) {
+        if (typeof decoded === "object" && decoded) {
             // req.userId is declared in your global types (see below)
-            req.userId = (decoded as any)._id;
+            req.userId = (decoded as any).userid;
         }
 
         return next();
